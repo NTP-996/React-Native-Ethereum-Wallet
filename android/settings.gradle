@@ -1,0 +1,3 @@
+rootProject.name = 'rn_ethereum_wallet1'
+
+include ':app'
