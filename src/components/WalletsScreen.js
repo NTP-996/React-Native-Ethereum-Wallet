@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View, AsyncStorage } from "react-native";
 import { Container, Content, Card, CardItem, Body, Text, Icon, Button } from "native-base";
 import { NavigationEvents } from 'react-navigation';
+import { ethers } from 'ethers';
 
 import WalletComponent from './WalletComponent';
 
@@ -57,6 +58,33 @@ export default class WalletsScreen extends Component {
             </View>    
         );
     }
+
+    componentWillMount() {
+
+        // 1. Create the provider
+        let provider = ethers.getDefaultProvider('ropsten');
+
+        const pollingInterval = 20 * 1000; // 20 seconds
+        this.poller = setInterval(() => {
+            const wallets = [...this.state.wallets];
+
+            // 2. Start viewing Wallet Balance
+            wallets.forEach(wallet => {
+                provider.getBalance(wallet.address).then((balance) => {
+                    // Convert the ethereum balance wei to ether
+                    const etherString = ethers.utils.formatEther(balance);
+                    wallet.balance = etherString;
+                });
+            });
+
+            // 3. Refresh Wallet list and update Storage
+            this.setState({ wallets }, () => {
+                AsyncStorage.setItem('WALLETS', JSON.stringify(wallets));
+            });
+        }, pollingInterval); // Perform every 20 seconds
+
+    } // componentWillMount
+
 }
 
 const styles = StyleSheet.create({
