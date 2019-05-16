@@ -40,7 +40,9 @@ export default class WalletInfoScreen extends Component {
                                 <Button bordered info style={{flex:1, justifyContent:'center', marginRight: 10}} onPress={() => {
                                         this.props.navigation.navigate('ReceiveScreen', wallet)
                                     }}><Text>Deposit</Text></Button>
-                                <Button bordered warning style={{flex:1, justifyContent:'center', marginLeft: 10}}><Text>Withdraw</Text></Button>
+                                <Button bordered warning style={{flex:1, justifyContent:'center', marginLeft: 10}} onPress={() => {
+                                        this.props.navigation.navigate('SendScreen', wallet)
+                                    }}><Text>Withdraw</Text></Button>
                             </Body>
                         </CardItem>
                     </Card>
