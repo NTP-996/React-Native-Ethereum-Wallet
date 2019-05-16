@@ -4,8 +4,7 @@ import { Container, Content, Segment, Text, Icon, Button, Header, Left, Body, Ti
 
 import bip39 from 'react-native-bip39';
 import hdkey from 'hdkey';
-// import bip32 from 'bip32';
-import ethUtil from 'ethereumjs-util';
+import * as ethUtil from 'ethereumjs-util';
 
 
 export default class CreateWalletScreen extends Component {
@@ -32,20 +31,15 @@ export default class CreateWalletScreen extends Component {
         const seed = bip39.mnemonicToSeed(this.state.mnemonic);
         // Master Key Generation (HDPrivateKey)
         const root = hdkey.fromMasterSeed(seed);
-        console.log(root)
         // Ethereum private key generation
         const xPrivKey = root.derive("m/44'/60'/0'/0/0");
-        console.log(xPrivKey)
         const privKey = root.privateKey.toString('hex');
-        console.log(privKey)
         // Ethereum address generation
-        console.log(xPrivKey._privateKey)
         const pubKey = ethUtil.privateToPublic(xPrivKey._privateKey);
-        console.log(pubKey);
-        // let address = ethUtil.publicToAddress(pubKey).toString('hex');
+        let address = ethUtil.publicToAddress(pubKey).toString('hex');
         // Convert to Ethereum EIP-55 checksum address
-    //     address = ethUtil.toChecksumAddress(address).toString('hex');
-    //     alert(address);
+        address = ethUtil.toChecksumAddress(address);
+        alert(address);
     }
 
     render() {
