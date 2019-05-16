@@ -3,8 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { Container, Content, Segment, Text, Icon, Button, Header, Left, Body, Title, Right, Form, Textarea, Input, Item } from 'native-base';
 
 import bip39 from 'react-native-bip39';
-import bip32 from 'bip32';
-// import ethUtil from 'ethereumjs-util';
+import hdkey from 'hdkey';
+// import bip32 from 'bip32';
+import ethUtil from 'ethereumjs-util';
 
 
 export default class CreateWalletScreen extends Component {
@@ -27,19 +28,25 @@ export default class CreateWalletScreen extends Component {
         });
     }
 
-    // _createWallet = async () => {
-    //     const seed = bip39.mnemonicToSeed(this.state.mnemonic);
-    //     // Master Key Generation (HDPrivateKey)
-    //     const root = bip32.fromSeed(seed);
-    //     // Ethereum private key generation
-    //     const xPrivKey = root.derivePath("m/44'/60'/0'/0/0");
-    //     const privKey = xPrivKey.privateKey.toString('hex');
-    //     // Ethereum address generation
-    //     let address = ethUtil.pubToAddress(xPrivKey.publicKey, true).toString('hex');
-    //     // Convert to Ethereum EIP-55 checksum address
+    _createWallet = async () => {
+        const seed = bip39.mnemonicToSeed(this.state.mnemonic);
+        // Master Key Generation (HDPrivateKey)
+        const root = hdkey.fromMasterSeed(seed);
+        console.log(root)
+        // Ethereum private key generation
+        const xPrivKey = root.derive("m/44'/60'/0'/0/0");
+        console.log(xPrivKey)
+        const privKey = root.privateKey.toString('hex');
+        console.log(privKey)
+        // Ethereum address generation
+        console.log(xPrivKey._privateKey)
+        const pubKey = ethUtil.privateToPublic(xPrivKey._privateKey);
+        console.log(pubKey);
+        // let address = ethUtil.publicToAddress(pubKey).toString('hex');
+        // Convert to Ethereum EIP-55 checksum address
     //     address = ethUtil.toChecksumAddress(address).toString('hex');
     //     alert(address);
-    // }
+    }
 
     render() {
         return (
@@ -53,7 +60,7 @@ export default class CreateWalletScreen extends Component {
                     </View>
                     <View style={{ flex: 1 }}>
                         <Button block primary onPress={() => {
-                            // this._createWallet()
+                            this._createWallet()
                         }}>
                             <Text>Create</Text>
                         </Button>
