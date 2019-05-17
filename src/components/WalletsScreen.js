@@ -46,7 +46,16 @@ export default class WalletsScreen extends Component {
                         <Card>
                             <CardItem>
                                 <Body>
-                                    <Button transparent iconLeft large block onPress={() => this.props.navigation.navigate("CreateWallet")}>
+                                    <Button transparent iconLeft large block onPress={() => { this.props.navigation.navigate('ImportWallet')}}>
+								        <Icon name='import' type='MaterialCommunityIcons' ></Icon>
+                                        <Text>Import Wallet</Text>
+							        </Button>
+                                </Body>
+                            </CardItem>
+                            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, }}/>
+                            <CardItem>
+                                <Body>
+                                    <Button transparent iconLeft large block onPress={() => { this.props.navigation.navigate("CreateWallet")}}>
                                         <Icon name='ios-add-circle-outline' />
                                         <Text>Create Wallet</Text>
                                     </Button>

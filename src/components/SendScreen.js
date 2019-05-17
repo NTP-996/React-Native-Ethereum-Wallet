@@ -14,7 +14,7 @@ export default class SendScreen extends Component {
 		const wallet = props.navigation.state.params;
 
 		this.state = {
-			fromAddress:'',
+			fromAddress: wallet.address,
 			toAddress:'',
 			gasPrice: '2',
 			gasLimit: '21000',
@@ -50,24 +50,40 @@ export default class SendScreen extends Component {
             let totalRequiredAmount = ehter.add(estimateFee);
 
             // If the balance is less than the amount required for the transfer ...
-            let balance = ethers.utils.parseEther(wallet.balance);
+            let balance = ethers.utils.parseEther(this.state.wallet.balance);
             if(balance.lt(totalRequiredAmount)) {
                 let totalRequiredEther = ethers.utils.formatEther   (totalRequiredAmount);
                 return Alert.alert('There is not enough balance.', `Amount required including fees\n${totalRequiredEther} ETH`);
             }
         } catch(e) {
-            return Alert.alert('Please check the transfer amount.');
+            return Alert.alert('', 'Please check the transfer amount.');
         }
 
         // Verify incoming address
         try {
             if(!this.checkAddress(this.state.toAddress)) {
-                return Alert.alert('Please check your address.');
+                return Alert.alert('', 'Please check your address.');
             }
         } catch(e) {
             return Alert.alert('Please check your address.');
         }
-            Alert.alert('ok');
+        // Alert.alert('ok');
+
+		let {
+			fromAddress,
+			toAddress,
+			gasPrice,
+			gasLimit,
+			value,
+		} = this.state;
+		let transcation = {
+			fromAddress,
+			toAddress,
+			gasPrice,
+			gasLimit,
+			value
+		};
+		this.props.navigation.navigate('ConfimTx', transcation);
     }
 
 
